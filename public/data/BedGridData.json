@@ -1,0 +1,10 @@
+[
+  { "title": "3 Surgical", "icon": "bedOff", "value": "15", "diff": 5, "ext": "5001" },
+  { "title": "ACUTE", "icon": "bed", "value": "16", "diff": -10, "ext": "5002" },
+  { "title": "CPCU", "icon": "bed", "value": "18", "diff": -5, "ext": "5003" },
+  { "title": "MSICU", "icon": "bed", "value": "8", "diff": 8, "ext": "5004" },
+  { "title": "NICU", "icon": "bed", "value": "3", "diff": -4, "ext": "5005" },
+  { "title": "NRSY", "icon": "bed", "value": "2", "diff": 3, "ext": "5005" },
+  { "title": "OB", "icon": "user", "value": "6", "diff": -2, "ext": "5007" },
+  { "title": "MPCU", "icon": "user", "value": "2", "diff": -2, "ext": "5008" }
+]

@@ -1,0 +1,870 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:44a9f3a1-ed3d-4d92-8357-aa3fdb29c122",
+      "request": {
+        "method": "PUT",
+        "url": "CodeSystem?name=call-dispositions"
+      },
+      "resource": {
+        "resourceType": "CodeSystem",
+        "status": "active",
+        "content": "complete",
+        "url": "https://samplemed.com/fhir/CodeSystem/call-dispositions",
+        "name": "call-dispositions",
+        "title": "Call Dispositions",
+        "concept": [
+          {
+            "code": "COMPLETE",
+            "display": "Completed Transfer"
+          },
+          {
+            "code": "CONSULT",
+            "display": "Consultation"
+          },
+          {
+            "code": "HLOC",
+            "display": "Higher Level of Care"
+          },
+          {
+            "code": "DECLINED",
+            "display": "Declination"
+          },
+          {
+            "code": "CANCELLED",
+            "display": "Cancellation"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:8036a167-8711-4325-b3df-a40c71930f54",
+      "request": {
+        "method": "PUT",
+        "url": "ValueSet?name=time-sensitive-diagnosis"
+      },
+      "resource": {
+        "resourceType": "ValueSet",
+        "status": "active",
+        "url": "https://samplemed.com/fhir/ValueSet/time-sensitive-diagnosis",
+        "name": "time-sensitive-diagnosis",
+        "title": "Time Sensitive Diagnosis",
+        "compose": {
+          "include": [
+            {
+              "system": "http://snomed.info/sct",
+              "concept": [
+                {
+                  "code": "91302008",
+                  "display": "Sepsis"
+                },
+                {
+                  "code": "401303003",
+                  "display": "STEMI"
+                },
+                {
+                  "code": "230690007",
+                  "display": "Stroke"
+                },
+                {
+                  "code": "417746004",
+                  "display": "Trauma"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:4d56ba86-d8ae-49e9-a9d9-d3831dd5fd4d",
+      "request": {
+        "method": "PUT",
+        "url": "ValueSet?name=transferring-origins"
+      },
+      "resource": {
+        "resourceType": "ValueSet",
+        "status": "active",
+        "url": "https://www.samplemed.com/ValueSet/transferring-origins",
+        "name": "transferring-origins",
+        "title": "Transferring Origins",
+        "expansion": {
+          "timestamp": "2024-08-16T16:52:00.000Z"
+        },
+        "compose": {
+          "include": [
+            {
+              "system": "http://snomed.info/sct",
+              "concept": [
+                {
+                  "code": "225728007",
+                  "display": "ED"
+                },
+                {
+                  "code": "22232009",
+                  "display": "Hospital"
+                },
+                {
+                  "code": "257585005",
+                  "display": "Clinic"
+                },
+                {
+                  "code": "42665001",
+                  "display": "Nursing home"
+                },
+                {
+                  "code": "74964007",
+                  "display": "Other"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:e586a4d8-5a24-472c-b622-d5d88e759f1a",
+      "request": {
+        "method": "PUT",
+        "url": "ValueSet?name=accepting-specialties"
+      },
+      "resource": {
+        "resourceType": "ValueSet",
+        "status": "active",
+        "url": "https://samplemed.com/fhir/ValueSet/accepting-specialties",
+        "name": "accepting-specialties",
+        "title": "Accepting Specialties",
+        "expansion": {
+          "timestamp": "2024-08-19T03:55:00.000Z"
+        },
+        "compose": {
+          "include": [
+            {
+              "system": "http://snomed.info/sct",
+              "concept": [
+                {
+                  "code": "394577000",
+                  "display": "Anesthesiology"
+                },
+                {
+                  "code": "394579002",
+                  "display": "Cardiology"
+                },
+                {
+                  "code": "112802009",
+                  "display": "CV Surgery"
+                },
+                {
+                  "code": "394618009",
+                  "display": "ED Direct Nurse"
+                },
+                {
+                  "display": "Emergency medicine",
+                  "code": "773568002"
+                },
+                {
+                  "code": "310149003",
+                  "display": "ENT"
+                },
+                {
+                  "code": "394609007",
+                  "display": "General surgery"
+                },
+                {
+                  "code": "768837005",
+                  "display": "Hospitalist"
+                },
+                {
+                  "code": "360037004",
+                  "display": "Imaging"
+                },
+                {
+                  "code": "419192003",
+                  "display": "Internal medicine"
+                },
+                {
+                  "code": "408455009",
+                  "display": "IV Radiology"
+                },
+                {
+                  "code": "408457001",
+                  "display": "Maxillofacial"
+                },
+                {
+                  "code": "394589003",
+                  "display": "Nephrology"
+                },
+                {
+                  "code": "394591006",
+                  "display": "Neurology"
+                },
+                {
+                  "code": "394649004",
+                  "display": "Nuclear medicine"
+                },
+                {
+                  "code": "394585009",
+                  "display": "OB/GYN"
+                },
+                {
+                  "display": "OMF",
+                  "code": "408457001"
+                },
+                {
+                  "display": "Oncology",
+                  "code": "394593009"
+                },
+                {
+                  "display": "Ophthalmology",
+                  "code": "394594003"
+                },
+                {
+                  "display": "Oral Maxillofacial",
+                  "code": "408465003"
+                },
+                {
+                  "display": "Orthopedics",
+                  "code": "394801008"
+                },
+                {
+                  "display": "Pediatrics",
+                  "code": "394537008"
+                },
+                {
+                  "display": "Pharmacy",
+                  "code": "310080006"
+                },
+                {
+                  "display": "PICC",
+                  "code": "392020005"
+                },
+                {
+                  "display": "Plastic Surgery",
+                  "code": "394611003"
+                },
+                {
+                  "code": "418112009",
+                  "display": "Pulmonology"
+                },
+                {
+                  "code": "897187007",
+                  "display": "SANE"
+                },
+                {
+                  "display": "Specialist",
+                  "code": "309395003"
+                },
+                {
+                  "code": "16310003",
+                  "display": "Ultrasound"
+                },
+                {
+                  "code": "261665006",
+                  "display": "Unknown"
+                },
+                {
+                  "display": "Urology",
+                  "code": "394612005"
+                },
+                {
+                  "display": "Other - Specify in Comments",
+                  "code": "74964007"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:72b62582-79e4-40c5-ac92-7ddc5b8b7bad",
+      "request": {
+        "method": "PUT",
+        "url": "ValueSet?name=starting-locations"
+      },
+      "resource": {
+        "resourceType": "ValueSet",
+        "status": "active",
+        "url": "https://samplemed.com/fhir/ValueSet/starting-locations",
+        "name": "starting-locations",
+        "title": "Starting Locations",
+        "compose": {
+          "include": [
+            {
+              "system": "http://snomed.info/sct",
+              "concept": [
+                {
+                  "code": "419590001",
+                  "display": "MPCU"
+                },
+                {
+                  "code": "309904001",
+                  "display": "ICU"
+                },
+                {
+                  "code": "418028002",
+                  "display": "PCU"
+                },
+                {
+                  "code": "405269005",
+                  "display": "NICU"
+                },
+                {
+                  "code": "25731000087105",
+                  "display": "Acute"
+                },
+                {
+                  "code": "309984004",
+                  "display": "Surgical"
+                },
+                {
+                  "code": "309944008",
+                  "display": "OB"
+                },
+                {
+                  "code": "405607001",
+                  "display": "Ambulatory Surgery"
+                },
+                {
+                  "code": "225738002",
+                  "display": "Operating room"
+                },
+                {
+                  "code": "385757000",
+                  "display": "Cath"
+                },
+                {
+                  "code": "225728007",
+                  "display": "ED"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:6dee3e11-4ca6-4b32-b237-df84815f580a",
+      "request": {
+        "method": "PUT",
+        "url": "ValueSet?name=call-dispositions"
+      },
+      "resource": {
+        "resourceType": "ValueSet",
+        "status": "active",
+        "url": "https://samplemed.com/fhir/ValueSet/call-dispositions",
+        "name": "call-dispositions",
+        "title": "Call Dispositions",
+        "compose": {
+          "include": [
+            {
+              "system": "https://samplemed.com/fhir/CodeSystem/call-dispositions"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b034ef8f-91bb-440c-af4e-7da84b5167fc",
+      "request": {
+        "method": "PUT",
+        "url": "Questionnaire?name=patient-intake-questionnaire"
+      },
+      "resource": {
+        "resourceType": "Questionnaire",
+        "status": "active",
+        "name": "patient-intake-questionnaire",
+        "title": "Patient Transfer Form",
+        "item": [
+          {
+            "linkId": "dateTime",
+            "type": "dateTime",
+            "text": "Date/Time",
+            "required": true
+          },
+          {
+            "linkId": "patientInfo",
+            "type": "group",
+            "text": "Patient Info",
+            "item": [
+              {
+                "linkId": "firstName",
+                "type": "string",
+                "text": "First Name",
+                "required": true
+              },
+              {
+                "linkId": "lastName",
+                "type": "string",
+                "text": "Last Name",
+                "required": true
+              },
+              {
+                "linkId": "birthdate",
+                "type": "date",
+                "text": "Date of Birth",
+                "required": true
+              },
+              {
+                "linkId": "phone",
+                "type": "string",
+                "text": "Phone Number"
+              },
+              {
+                "linkId": "street",
+                "text": "Street",
+                "type": "string"
+              },
+              {
+                "linkId": "city",
+                "text": "City",
+                "type": "string"
+              },
+              {
+                "linkId": "state",
+                "text": "State",
+                "type": "choice",
+                "answerValueSet": "http://hl7.org/fhir/us/core/ValueSet/us-core-usps-state"
+              },
+              {
+                "linkId": "postalCode",
+                "text": "Postal Code",
+                "type": "string"
+              },
+              {
+                "linkId": "vitalSigns",
+                "type": "group",
+                "text": "Vital Signs",
+                "item": [
+                  {
+                    "linkId": "bloodPressureSystolic",
+                    "type": "integer",
+                    "text": "Systolic Blood Pressure (mmHg)"
+                  },
+                  {
+                    "linkId": "bloodPressureDiastolic",
+                    "type": "integer",
+                    "text": "Diastolic Blood Pressure (mmHg)"
+                  },
+                  {
+                    "linkId": "temperature",
+                    "type": "decimal",
+                    "text": "Body Temperature (F)"
+                  },
+                  {
+                    "linkId": "heartRate",
+                    "type": "integer",
+                    "text": "Heart Rate (beats/minute)"
+                  },
+                  {
+                    "linkId": "respiratoryRate",
+                    "type": "decimal",
+                    "text": "Respiratory Rate (breaths/minute)"
+                  },
+                  {
+                    "linkId": "oxygenSaturation",
+                    "type": "decimal",
+                    "text": "Oxygen Saturation (%O2)"
+                  },
+                  {
+                    "linkId": "height",
+                    "type": "decimal",
+                    "text": "Height (in)"
+                  },
+                  {
+                    "linkId": "weight",
+                    "type": "decimal",
+                    "text": "Weight (kg)"
+                  },
+                  {
+                    "linkId": "vitalSignsComments",
+                    "type": "text",
+                    "text": "Comments"
+                  }
+                ]
+              },
+              {
+                "linkId": "allergies",
+                "type": "group",
+                "text": "Allergy",
+                "item": [
+                  {
+                    "linkId": "allergySubstance",
+                    "type": "choice",
+                    "text": "Substance",
+                    "answerValueSet": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1186.8"
+                  }
+                ],
+                "repeats": true
+              }
+            ]
+          },
+          {
+            "linkId": "lab",
+            "type": "group",
+            "text": "Labs",
+            "item": [
+              {
+                "linkId": "na+",
+                "type": "string",
+                "text": "Na+"
+              },
+              {
+                "linkId": "k+",
+                "type": "string",
+                "text": "K+"
+              },
+              {
+                "linkId": "cl-",
+                "type": "string",
+                "text": "Cl-"
+              },
+              {
+                "linkId": "hco3",
+                "type": "string",
+                "text": "HCO3"
+              },
+              {
+                "linkId": "bun",
+                "type": "string",
+                "text": "BUN"
+              },
+              {
+                "linkId": "cr",
+                "type": "string",
+                "text": "Cr"
+              },
+              {
+                "linkId": "glucose",
+                "type": "string",
+                "text": "Glucose"
+              },
+              {
+                "linkId": "lactate",
+                "type": "string",
+                "text": "Lactate"
+              },
+              {
+                "linkId": "procalcitonin",
+                "type": "string",
+                "text": "Procalcitonin"
+              },
+              {
+                "linkId": "bilirubin",
+                "type": "string",
+                "text": "Bilirubin"
+              },
+              {
+                "linkId": "ast",
+                "type": "string",
+                "text": "AST"
+              },
+              {
+                "linkId": "alt",
+                "type": "string",
+                "text": "ALT"
+              },
+              {
+                "linkId": "lipase",
+                "type": "string",
+                "text": "Lipase"
+              },
+              {
+                "linkId": "wbc",
+                "type": "string",
+                "text": "WBC"
+              },
+              {
+                "linkId": "hb",
+                "type": "string",
+                "text": "Hb"
+              },
+              {
+                "linkId": "hct",
+                "type": "string",
+                "text": "HCT"
+              },
+              {
+                "linkId": "plts",
+                "type": "string",
+                "text": "Plts"
+              },
+              {
+                "linkId": "troponin",
+                "type": "string",
+                "text": "Troponin"
+              },
+              {
+                "linkId": "inr",
+                "type": "string",
+                "text": "INR"
+              }
+            ]
+          },
+          {
+            "linkId": "transferInfo",
+            "text": "Transfer Info",
+            "type": "group",
+            "item": [
+              {
+                "linkId": "timeSensitiveDiagnosis",
+                "type": "choice",
+                "text": "Time Sensitive Diagnosis",
+                "answerValueSet": "https://samplemed.com/fhir/ValueSet/time-sensitive-diagnosis"
+              },
+              {
+                "linkId": "chiefComplaint",
+                "type": "choice",
+                "text": "Chief Complaint",
+                "answerValueSet": "http://hl7.org/fhir/sid/icd-10-cm"
+              },
+              {
+                "linkId": "chiefComplaintComments",
+                "type": "text",
+                "text": "Chief Complaint Comments"
+              },
+              {
+                "linkId": "transferFacility",
+                "type": "reference",
+                "text": "Transferring Facility",
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource",
+                    "valueCode": "Organization"
+                  }
+                ],
+                "required": true
+              },
+              {
+                "linkId": "transferOrigin",
+                "type": "choice",
+                "text": "Transferring Origin",
+                "answerValueSet": "https://www.samplemed.com/ValueSet/transferring-origins"
+              },
+              {
+                "linkId": "transferPhys",
+                "type": "group",
+                "text": "Transferring Physician",
+                "item": [
+                  {
+                    "linkId": "transferPhysFirst",
+                    "type": "string",
+                    "text": "First Name",
+                    "required": true
+                  },
+                  {
+                    "linkId": "transferPhysLast",
+                    "type": "string",
+                    "text": "Last Name",
+                    "required": true
+                  },
+                  {
+                    "linkId": "transferPhysQual",
+                    "type": "string",
+                    "text": "Qualifications [Title(s)]"
+                  },
+                  {
+                    "linkId": "transferPhysPhone",
+                    "type": "string",
+                    "text": "Phone Number",
+                    "required": true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:dcad6932-b790-4f68-91a5-f0908b01f447",
+      "request": {
+        "method": "PUT",
+        "url": "Questionnaire?name=accepting-physician-intake-questionnaire"
+      },
+      "resource": {
+        "resourceType": "Questionnaire",
+        "status": "active",
+        "name": "accepting-physician-intake-questionnaire",
+        "title": "Accepting Physician Form",
+        "item": [
+          {
+            "linkId": "acceptingSpecialty",
+            "type": "choice",
+            "text": "Accepting Specialty",
+            "answerValueSet": "https://samplemed.com/fhir/ValueSet/accepting-specialties"
+          },
+          {
+            "linkId": "startingLocation",
+            "type": "choice",
+            "text": "Starting Location",
+            "answerValueSet": "https://samplemed.com/fhir/ValueSet/starting-locations"
+          },
+          {
+            "linkId": "primaryAcceptingPhysician",
+            "type": "reference",
+            "text": "Primary Accepting Physician",
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource",
+                "valueCode": "Practitioner"
+              }
+            ],
+            "required": true
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:2166a2a3-d633-4737-86c3-255da18a64cb",
+      "request": {
+        "method": "PUT",
+        "url": "Questionnaire?name=create-location-lvl-questionnaire"
+      },
+      "resource": {
+        "resourceType": "Questionnaire",
+        "status": "active",
+        "name": "create-location-lvl-questionnaire",
+        "title": "Create Location Form",
+        "item": [
+          {
+            "linkId": "name",
+            "type": "string",
+            "text": "Name",
+            "required": true
+          },
+          {
+            "linkId": "telecomPhone",
+            "type": "string",
+            "text": "Phone"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:fb7a3964-febb-47b1-b37f-15b90ba7e62a",
+      "request": {
+        "method": "PUT",
+        "url": "Questionnaire?name=create-location-ro-questionnaire"
+      },
+      "resource": {
+        "resourceType": "Questionnaire",
+        "status": "active",
+        "name": "create-location-ro-questionnaire",
+        "title": "Create Room Form",
+        "item": [
+          {
+            "linkId": "name",
+            "type": "string",
+            "text": "Name",
+            "required": true
+          },
+          {
+            "linkId": "operationalStatus",
+            "type": "choice",
+            "text": "Operational Status",
+            "answerValueSet": "http://terminology.hl7.org/ValueSet/v2-0116",
+            "required": true
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:497ee3b3-5794-4cd2-8d8e-f9951a3952b6",
+      "request": {
+        "method": "PUT",
+        "url": "Questionnaire?name=physician-onboarding-questionnaire"
+      },
+      "resource": {
+        "resourceType": "Questionnaire",
+        "status": "active",
+        "name": "physician-onboarding-questionnaire",
+        "title": "Physician Onboarding Form",
+        "item": [
+          {
+            "linkId": "g2",
+            "type": "group",
+            "item": [
+              {
+                "linkId": "prefix",
+                "type": "string",
+                "text": "Title"
+              },
+              {
+                "linkId": "firstName",
+                "type": "string",
+                "text": "First Name"
+              },
+              {
+                "linkId": "lastName",
+                "type": "string",
+                "text": "Last Name"
+              },
+              {
+                "linkId": "suffix",
+                "type": "string",
+                "text": "Qualifications"
+              }
+            ]
+          },
+          {
+            "linkId": "specialty",
+            "type": "choice",
+            "text": "Specialty",
+            "answerValueSet": "https://samplemed.com/fhir/ValueSet/accepting-specialties"
+          },
+          {
+            "linkId": "phoneNo",
+            "type": "string",
+            "text": "Phone Number"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:a59969cf-bf41-4093-9027-d16ab27a2070",
+      "request": {
+        "method": "PUT",
+        "url": "Questionnaire?name=patient-bed-assignment-questionnaire"
+      },
+      "resource": {
+        "resourceType": "Questionnaire",
+        "status": "active",
+        "name": "patient-bed-assignment-questionnaire",
+        "title": "Patient Bed Assignment",
+        "item": [
+          {
+            "linkId": "callDisposition",
+            "type": "choice",
+            "text": "Call Disposition",
+            "answerValueSet": "https://samplemed.com/fhir/ValueSet/call-dispositions"
+          },
+          {
+            "linkId": "assignedRoom",
+            "type": "reference",
+            "text": "Assigned Room",
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource",
+                "valueCode": "Location"
+              }
+            ],
+            "enableWhen": [
+              {
+                "question": "callDisposition",
+                "operator": "=",
+                "answerCoding": {
+                  "system": "https://samplemed.com/fhir/CodeSystem/call-dispositions",
+                  "code": "COMPLETE",
+                  "display": "Completed Transfer"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
