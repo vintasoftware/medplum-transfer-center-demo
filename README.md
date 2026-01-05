@@ -1,5 +1,3 @@
-
-
 # Medplum Transfer Center
 
 This repo is for the Medplum transfer center demo. Currently this portal includes a dashboard for the transfer center, as well as patient intake, and physician onboarding for the portal.
@@ -20,7 +18,7 @@ The [`Location` FHIR resource](https://hl7.org/fhir/r4/location.html) is used to
 
 Each `Location` has a `type` (eg. building, level, room) and can be "part of" another `Location` resource. We use this `partOf` field to represent that a lower-level location is located within the higher-level location that it is "part of".
 
-For example, the room `ACUTE 212` is "part of" the `ACUTE` level, which is in turn "part of" the  hospital building.
+For example, the room `ACUTE 212` is "part of" the `ACUTE` level, which is in turn "part of" the hospital building.
 
 This is how that looks hierarchically from the perspective of the FHIR model:
 
@@ -125,3 +123,58 @@ npm run bots:deploy
 ```
 
 When creating a new bot, make sure to add it to the `BOTS` array in the `scripts/deploy-bots.ts` file.
+
+## Running the Medplum Agent Locally
+
+The Medplum Agent is required to receive HL7 messages and other integrations. Follow these steps to run the agent locally:
+
+### 1. Download the Agent
+
+Download the latest Medplum Agent release from the [Medplum releases page](https://github.com/medplum/medplum/releases). Choose the appropriate binary for your platform:
+
+- Linux: `medplum-agent-X.X.X-linux-x64`
+- macOS: `medplum-agent-X.X.X-macos-x64`
+
+### 2. Make the Agent Executable
+
+After downloading, you need to give the agent permission to run:
+
+```bash
+chmod +x medplum-agent-5.0.10-linux-x64
+# Or for macOS:
+# chmod +x medplum-agent-5.0.10-macos-x64
+```
+
+### 3. Login to Medplum CLI
+
+Before running the agent, authenticate the terminal session with Medplum CLI:
+
+```bash
+npx medplum login
+```
+
+### 4. Run the Agent
+
+Execute the agent binary:
+
+```bash
+./medplum-agent-5.0.10-linux-x64
+# Or for macOS:
+# ./medplum-agent-5.0.10-macos-x64
+```
+
+When the agent successfully connects, you'll see a log message like:
+
+```json
+{ "level": "INFO", "msg": "Successfully connected to Medplum server", "timestamp": "2026-01-02T21:25:30.498Z" }
+```
+
+### 5. Send Test HL7 Messages
+
+Once the agent is running, you can send test ADT messages using the provided script:
+
+```bash
+npm run send-adt A01 201
+```
+
+This will send an A01 (patient admission) message for room 201 to the agent.
