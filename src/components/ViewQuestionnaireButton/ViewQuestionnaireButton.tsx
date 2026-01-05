@@ -24,7 +24,7 @@ export function ViewQuestionnaireButton(props: ViewQuestionnaireButtonProps): JS
   }, [medplum, value]);
 
   return (
-    <Button onClick={() => navigate(`Practitioner/${value}/questionnaire`)}>
+    <Button onClick={() => navigate(`/Practitioner/${value}/questionnaire`)}>
       {questionnaire ? 'View' : 'Create New'} Questionnaire
     </Button>
   );
