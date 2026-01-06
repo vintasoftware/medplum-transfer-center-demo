@@ -124,57 +124,25 @@ npm run bots:deploy
 
 When creating a new bot, make sure to add it to the `BOTS` array in the `scripts/deploy-bots.ts` file.
 
-## Running the Medplum Agent Locally
+## Running Commands Locally
 
-The Medplum Agent is required to receive HL7 messages and other integrations. Follow these steps to run the agent locally:
+### Medplum Agent
 
-### 1. Download the Agent
+The Medplum Agent is required to receive HL7 messages. To run the agent locally, follow the instructions in the [Medplum Agent documentation](https://www.medplum.com/docs/agent).
 
-Download the latest Medplum Agent release from the [Medplum releases page](https://github.com/medplum/medplum/releases). Choose the appropriate binary for your platform:
-
-- Linux: `medplum-agent-X.X.X-linux-x64`
-- macOS: `medplum-agent-X.X.X-macos-x64`
-
-### 2. Make the Agent Executable
-
-After downloading, you need to give the agent permission to run:
+Once the agent is running, you can send test ADT messages using the provided script to test the sample application:
 
 ```bash
-chmod +x medplum-agent-5.0.10-linux-x64
-# Or for macOS:
-# chmod +x medplum-agent-5.0.10-macos-x64
+npm run send-adt <MESSAGE_TYPE> <ROOM_NUMBER>
 ```
 
-### 3. Login to Medplum CLI
+Available message types:
+- `A01` - Patient admission
+- `A03` - Patient discharge
 
-Before running the agent, authenticate the terminal session with Medplum CLI:
+Example:
 
 ```bash
-npx medplum login
+npm run send-adt A01 201  # Admit patient to room 201
+npm run send-adt A03 201  # Discharge patient from room 201
 ```
-
-### 4. Run the Agent
-
-Execute the agent binary:
-
-```bash
-./medplum-agent-5.0.10-linux-x64
-# Or for macOS:
-# ./medplum-agent-5.0.10-macos-x64
-```
-
-When the agent successfully connects, you'll see a log message like:
-
-```json
-{ "level": "INFO", "msg": "Successfully connected to Medplum server", "timestamp": "2026-01-02T21:25:30.498Z" }
-```
-
-### 5. Send Test HL7 Messages
-
-Once the agent is running, you can send test ADT messages using the provided script:
-
-```bash
-npm run send-adt A01 201
-```
-
-This will send an A01 (patient admission) message for room 201 to the agent.
