@@ -46,7 +46,7 @@ export function FhirPathTable<T extends Resource = Resource>(props: FhirPathTabl
   const [selected, setSelected] = useState<{ [id: string]: boolean }>({});
   const [refreshCount, setRefreshCount] = useState(0);
 
-  const responseRef = useRef<SmartSearchResponse>();
+  const responseRef = useRef<SmartSearchResponse | undefined>(undefined);
   responseRef.current = response;
 
   const selectedRef = useRef<{ [id: string]: boolean }>({});
