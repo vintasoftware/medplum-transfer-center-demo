@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 // Re-export JSX namespace from React for React 19 compatibility
 declare global {
   namespace JSX {
