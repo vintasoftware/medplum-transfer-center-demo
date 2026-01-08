@@ -11,6 +11,11 @@ export function TasksTab(props: TasksTabProps): JSX.Element {
   const { serviceRequest } = props;
   const navigate = useNavigate();
 
+  const serviceRequestRef = getReferenceString(serviceRequest);
+  if (!serviceRequestRef) {
+    return <div>Service request not found</div>;
+  }
+
   const search: SearchRequest = {
     resourceType: 'Task',
     fields: ['status', 'owner', 'code'],
@@ -18,7 +23,7 @@ export function TasksTab(props: TasksTabProps): JSX.Element {
       {
         code: 'based-on',
         operator: Operator.EQUALS,
-        value: getReferenceString(serviceRequest),
+        value: serviceRequestRef,
       },
     ],
   };

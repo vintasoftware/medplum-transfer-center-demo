@@ -4,7 +4,7 @@ import type { OperationOutcome, Resource } from '@medplum/fhirtypes';
 // TODO: When porting this back, make sure `useMedplum` comes from `@medplum/react-hooks`
 import { SearchClickEvent, useMedplum } from '@medplum/react';
 import { IconRefresh } from '@tabler/icons-react';
-import { ChangeEvent, MouseEvent, memo, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, MouseEvent, memo, useEffect, useMemo, useRef, useState } from 'react';
 import { isCheckboxCell, killEvent } from '../../lib/utils';
 import { FhirPathDisplay, FhirPathDisplayRenderProps } from '../FhirPathDisplay/FhirPathDisplay';
 
@@ -46,28 +46,52 @@ export function FhirPathTable<T extends Resource = Resource>(props: FhirPathTabl
   const [selected, setSelected] = useState<{ [id: string]: boolean }>({});
   const [refreshCount, setRefreshCount] = useState(0);
 
-  const responseRef = useRef<SmartSearchResponse>();
-  responseRef.current = response;
-
+  const responseRef = useRef<SmartSearchResponse | undefined>(undefined);
   const selectedRef = useRef<{ [id: string]: boolean }>({});
-  selectedRef.current = selected;
 
   useEffect(() => {
-    setOutcome(undefined);
+    responseRef.current = response;
+  }, [response]);
+
+  useEffect(() => {
+    selectedRef.current = selected;
+  }, [selected]);
+
+  useEffect(() => {
+    let cancelled = false;
     if (searchType === 'fhirSearch') {
       medplum
         .searchResources(resourceType, query)
         // @ts-expect-error This should be correct
         .then((resources: T[]) => {
-          setResponse({ data: { ResourceList: resources } });
+          if (!cancelled) {
+            setOutcome(undefined);
+            setResponse({ data: { ResourceList: resources } });
+          }
         })
-        .catch((err) => setOutcome(normalizeOperationOutcome(err)));
+        .catch((err) => {
+          if (!cancelled) {
+            setOutcome(normalizeOperationOutcome(err));
+          }
+        });
     } else {
       medplum
         .graphql(query)
-        .then(setResponse)
-        .catch((err) => setOutcome(normalizeOperationOutcome(err)));
+        .then((res) => {
+          if (!cancelled) {
+            setOutcome(undefined);
+            setResponse(res);
+          }
+        })
+        .catch((err) => {
+          if (!cancelled) {
+            setOutcome(normalizeOperationOutcome(err));
+          }
+        });
     }
+    return () => {
+      cancelled = true;
+    };
   }, [medplum, query, searchType, resourceType, refreshCount]);
 
   function handleSingleCheckboxClick(e: ChangeEvent, id: string): void {
@@ -101,18 +125,18 @@ export function FhirPathTable<T extends Resource = Resource>(props: FhirPathTabl
     setSelected(newSelected);
   }
 
-  function isAllSelected(): boolean {
-    const resources = responseRef.current?.data.ResourceList;
+  const isAllSelected = useMemo(() => {
+    const resources = response?.data.ResourceList;
     if (!resources || resources.length === 0) {
       return false;
     }
     for (const resource of resources) {
-      if (resource.id && !selectedRef.current[resource.id]) {
+      if (resource.id && !selected[resource.id]) {
         return false;
       }
     }
     return true;
-  }
+  }, [response, selected]);
 
   function handleRowClick(e: MouseEvent, resource: Resource): void {
     if (isCheckboxCell(e.target as Element)) {
@@ -166,7 +190,7 @@ export function FhirPathTable<T extends Resource = Resource>(props: FhirPathTabl
                   value="checked"
                   aria-label="all-checkbox"
                   data-testid="all-checkbox"
-                  checked={isAllSelected()}
+                  checked={isAllSelected}
                   onChange={(e) => handleAllCheckboxClick(e)}
                 />
               </Table.Th>

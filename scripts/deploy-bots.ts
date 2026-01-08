@@ -1,4 +1,4 @@
-import { ContentType, getReferenceString, MedplumClient } from '@medplum/core';
+import { ContentType, getReferenceString, MedplumClient, WithId } from '@medplum/core';
 import { Binary, Bot, Bundle, BundleEntry, Extension, Questionnaire } from '@medplum/fhirtypes';
 import { randomUUID } from 'crypto';
 import * as dotenv from 'dotenv';
@@ -89,7 +89,11 @@ async function uploadBots(): Promise<void> {
       const createBotUrl = new URL(`admin/projects/${projectId as string}/bot`, medplum.getBaseUrl());
       existingBot = (await medplum.post(createBotUrl, {
         name: botName,
-      })) as Bot;
+      })) as WithId<Bot>;
+    }
+
+    if (!existingBot?.id) {
+      throw new Error(`Failed to create or find bot: ${botName}`);
     }
 
     const botMembership = await medplum.searchOne('ProjectMembership', { user: getReferenceString(existingBot) });
@@ -100,16 +104,21 @@ async function uploadBots(): Promise<void> {
       });
     }
 
-    botIds[botName] = existingBot.id as string;
+    botIds[botName] = existingBot.id;
 
     // Replace the Bot id placeholder in the bundle
     transactionString = transactionString
       .replaceAll(`$bot-${botName}-reference`, getReferenceString(existingBot))
-      .replaceAll(`$bot-${botName}-id`, existingBot.id as string);
+      .replaceAll(`$bot-${botName}-id`, existingBot.id);
   }
 
   for (const questionnaire of questionnaires) {
-    transactionString = transactionString.replaceAll(`$${questionnaire.name}`, getReferenceString(questionnaire));
+    if (questionnaire.name) {
+      const questionnaireRef = getReferenceString(questionnaire);
+      if (questionnaireRef) {
+        transactionString = transactionString.replaceAll(`$${questionnaire.name}`, questionnaireRef);
+      }
+    }
   }
 
   console.log('\nUploading bots bundle...\n');

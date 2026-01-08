@@ -1,5 +1,3 @@
-
-
 # Medplum Transfer Center
 
 This repo is for the Medplum transfer center demo. Currently this portal includes a dashboard for the transfer center, as well as patient intake, and physician onboarding for the portal.
@@ -20,7 +18,7 @@ The [`Location` FHIR resource](https://hl7.org/fhir/r4/location.html) is used to
 
 Each `Location` has a `type` (eg. building, level, room) and can be "part of" another `Location` resource. We use this `partOf` field to represent that a lower-level location is located within the higher-level location that it is "part of".
 
-For example, the room `ACUTE 212` is "part of" the `ACUTE` level, which is in turn "part of" the  hospital building.
+For example, the room `ACUTE 212` is "part of" the `ACUTE` level, which is in turn "part of" the hospital building.
 
 This is how that looks hierarchically from the perspective of the FHIR model:
 
@@ -125,3 +123,26 @@ npm run bots:deploy
 ```
 
 When creating a new bot, make sure to add it to the `BOTS` array in the `scripts/deploy-bots.ts` file.
+
+## Running Commands Locally
+
+### Medplum Agent
+
+The Medplum Agent is required to receive HL7 messages. To run the agent locally, follow the instructions in the [Medplum Agent documentation](https://www.medplum.com/docs/agent).
+
+Once the agent is running, you can send test ADT messages using the provided script to test the sample application:
+
+```bash
+npm run send-adt <MESSAGE_TYPE> <ROOM_NUMBER>
+```
+
+Available message types:
+- `A01` - Patient admission
+- `A03` - Patient discharge
+
+Example:
+
+```bash
+npm run send-adt A01 201  # Admit patient to room 201
+npm run send-adt A03 201  # Discharge patient from room 201
+```

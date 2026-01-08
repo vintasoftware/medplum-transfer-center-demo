@@ -25,26 +25,29 @@ export function ServiceRequestDetails(props: PatientDetailsProps): JSX.Element {
   const [supplementaryResponse, setSupplementaryResponse] = useState<QuestionnaireResponse>();
 
   useEffect(() => {
-    if (!serviceRequest) {
-      setIntakeResponse(undefined);
-      setSupplementaryResponse(undefined);
-      return;
+    function loadSupportingInfo() {
+      if (!serviceRequest) {
+        setIntakeResponse(undefined);
+        setSupplementaryResponse(undefined);
+        return;
+      }
+      if (!serviceRequest.supportingInfo) {
+        return;
+      }
+      if (serviceRequest.supportingInfo?.[0]) {
+        medplum
+          .readReference(serviceRequest.supportingInfo?.[0])
+          .then((response) => setIntakeResponse(response as QuestionnaireResponse))
+          .catch(console.error);
+      }
+      if (serviceRequest.supportingInfo?.[1]) {
+        medplum
+          .readReference(serviceRequest.supportingInfo?.[1])
+          .then((response) => setSupplementaryResponse(response as QuestionnaireResponse))
+          .catch(console.error);
+      }
     }
-    if (!serviceRequest.supportingInfo) {
-      return;
-    }
-    if (serviceRequest.supportingInfo?.[0]) {
-      medplum
-        .readReference(serviceRequest.supportingInfo?.[0])
-        .then((response) => setIntakeResponse(response as QuestionnaireResponse))
-        .catch(console.error);
-    }
-    if (serviceRequest.supportingInfo?.[1]) {
-      medplum
-        .readReference(serviceRequest.supportingInfo?.[1])
-        .then((response) => setSupplementaryResponse(response as QuestionnaireResponse))
-        .catch(console.error);
-    }
+    loadSupportingInfo();
   }, [serviceRequest, medplum]);
 
   const tabs = ['Details', 'History', 'Tasks', 'Notes'];
