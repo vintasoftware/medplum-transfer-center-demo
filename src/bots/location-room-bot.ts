@@ -1,6 +1,6 @@
-import { CREATE_LOCATION_ROOM_QUESTIONNAIRE_ID } from '@/constants';
+import { CREATE_LOCATION_ROOM_QUESTIONNAIRE_NAME } from '@/constants';
 import { MedplumClient, BotEvent, getQuestionnaireAnswers, resolveId } from '@medplum/core';
-import { Location, QuestionnaireResponse, Reference } from '@medplum/fhirtypes';
+import { Location, Questionnaire, QuestionnaireResponse, Reference } from '@medplum/fhirtypes';
 
 export async function handler(medplum: MedplumClient, event: BotEvent<QuestionnaireResponse>): Promise<void> {
   const { input } = event;
@@ -9,7 +9,14 @@ export async function handler(medplum: MedplumClient, event: BotEvent<Questionna
     throw new Error('Invalid input');
   }
 
-  if (input.questionnaire !== `Questionnaire/${CREATE_LOCATION_ROOM_QUESTIONNAIRE_ID}`) {
+  // Validate questionnaire by fetching it and checking the name
+  const questionnaireRef = input.questionnaire;
+  if (!questionnaireRef) {
+    throw new Error('Missing questionnaire reference');
+  }
+
+  const questionnaire = await medplum.readReference<Questionnaire>({ reference: questionnaireRef });
+  if (questionnaire.name !== CREATE_LOCATION_ROOM_QUESTIONNAIRE_NAME) {
     throw new Error('Invalid questionnaire');
   }
 

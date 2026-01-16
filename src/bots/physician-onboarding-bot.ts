@@ -1,6 +1,12 @@
 import { BotEvent, MedplumClient, createReference, getQuestionnaireAnswers } from '@medplum/core';
-import { Coding, Practitioner, QuestionnaireResponse, QuestionnaireResponseItemAnswer } from '@medplum/fhirtypes';
-import { SAMPLE_MED_ORG_ID } from '@/constants';
+import {
+  Coding,
+  Organization,
+  Practitioner,
+  QuestionnaireResponse,
+  QuestionnaireResponseItemAnswer,
+} from '@medplum/fhirtypes';
+import { SAMPLE_MED_ORG_NAME } from '@/constants';
 
 type PractitionerLinkId = 'prefix' | 'firstName' | 'lastName' | 'suffix' | 'phoneNo' | 'specialty';
 type ValidLinkId = PractitionerLinkId;
@@ -102,6 +108,12 @@ export async function handler(medplum: MedplumClient, event: BotEvent<Questionna
   // After processing all items from QuestionnaireResponse,
   // We can process the data we parsed from it
 
+  // Fetch organization by name
+  const organization = await medplum.searchOne('Organization', { name: SAMPLE_MED_ORG_NAME });
+  if (!organization) {
+    throw new Error(`Organization "${SAMPLE_MED_ORG_NAME}" not found`);
+  }
+
   // Create the patient in Medplum
   // TODO: Create if not exists
   const practitioner = await medplum.createResource(results.practitioner);
@@ -110,7 +122,7 @@ export async function handler(medplum: MedplumClient, event: BotEvent<Questionna
   await medplum.createResource({
     resourceType: 'PractitionerRole',
     practitioner: createReference(practitioner),
-    organization: createReference({ resourceType: 'Organization', id: SAMPLE_MED_ORG_ID }),
+    organization: createReference(organization as Organization),
     specialty: [{ coding: [results.specialty] }],
   });
 }

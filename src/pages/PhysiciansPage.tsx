@@ -1,13 +1,36 @@
 import { FhirPathTable, FhirPathTableField } from '@/components/FhirPathTable/FhirPathTable';
 import { ViewQuestionnaireButton } from '@/components/ViewQuestionnaireButton/ViewQuestionnaireButton';
-import { Button, Container, Title } from '@mantine/core';
+import { Button, Container, Loader, Title } from '@mantine/core';
 import { PropertyType } from '@medplum/core';
-import { useMemo } from 'react';
+import { Organization } from '@medplum/fhirtypes';
+import { useMedplum } from '@medplum/react';
+import { useEffect, useMemo, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { SAMPLE_MED_ORG_ID } from '@/constants';
+import { SAMPLE_MED_ORG_NAME } from '@/constants';
 
-const query = `{
-  ResourceList: PractitionerList(_filter: "_has:PractitionerRole:practitioner:organization re 'Organization/${SAMPLE_MED_ORG_ID}'") {
+export function PhysiciansPage(): JSX.Element {
+  const navigate = useNavigate();
+  const medplum = useMedplum();
+  const [organization, setOrganization] = useState<Organization>();
+
+  useEffect(() => {
+    medplum
+      .searchOne('Organization', { name: SAMPLE_MED_ORG_NAME })
+      .then((org) => {
+        if (!org) {
+          throw new Error(`Organization "${SAMPLE_MED_ORG_NAME}" not found`);
+        }
+        setOrganization(org);
+      })
+      .catch((err) => {
+        console.error('Failed to load organization:', err);
+      });
+  }, [medplum]);
+
+  const query = useMemo(() => {
+    if (!organization?.id) return '';
+    return `{
+  ResourceList: PractitionerList(_filter: "_has:PractitionerRole:practitioner:organization re 'Organization/${organization.id}'") {
     id,
     name {
       prefix,
@@ -25,9 +48,7 @@ const query = `{
     }
   }
 }`;
-
-export function PhysiciansPage(): JSX.Element {
-  const navigate = useNavigate();
+  }, [organization]);
   const fields = useMemo<FhirPathTableField[]>(
     () => [
       {
@@ -55,6 +76,14 @@ export function PhysiciansPage(): JSX.Element {
     ],
     [navigate]
   );
+
+  if (!organization) {
+    return (
+      <Container fluid>
+        <Loader />
+      </Container>
+    );
+  }
 
   return (
     <Container fluid>

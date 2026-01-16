@@ -1,12 +1,22 @@
-import { Container } from '@mantine/core';
-import { QuestionnaireResponse } from '@medplum/fhirtypes';
+import { Container, Loader } from '@mantine/core';
+import { Questionnaire, QuestionnaireResponse } from '@medplum/fhirtypes';
 import { QuestionnaireForm, useMedplum, useMedplumNavigate } from '@medplum/react';
-import { useCallback } from 'react';
-import { PHYSICIAN_ONBOARDING_QUESTIONNAIRE_ID } from '@/constants';
+import { useCallback, useEffect, useState } from 'react';
+import { PHYSICIAN_ONBOARDING_QUESTIONNAIRE_NAME } from '@/constants';
+import { getQuestionnaireByName } from '@/utils';
 
 export function NewPhysicianPage(): JSX.Element {
   const medplum = useMedplum();
   const navigate = useMedplumNavigate();
+  const [questionnaire, setQuestionnaire] = useState<Questionnaire>();
+
+  useEffect(() => {
+    getQuestionnaireByName(medplum, PHYSICIAN_ONBOARDING_QUESTIONNAIRE_NAME)
+      .then(setQuestionnaire)
+      .catch((err) => {
+        console.error('Failed to load questionnaire:', err);
+      });
+  }, [medplum]);
 
   const handleSubmit = useCallback(
     (response: QuestionnaireResponse) => {
@@ -20,12 +30,17 @@ export function NewPhysicianPage(): JSX.Element {
     [medplum, navigate]
   );
 
+  if (!questionnaire) {
+    return (
+      <Container fluid>
+        <Loader />
+      </Container>
+    );
+  }
+
   return (
     <Container fluid>
-      <QuestionnaireForm
-        questionnaire={{ reference: `Questionnaire/${PHYSICIAN_ONBOARDING_QUESTIONNAIRE_ID}` }}
-        onSubmit={handleSubmit}
-      />
+      <QuestionnaireForm questionnaire={questionnaire} onSubmit={handleSubmit} />
     </Container>
   );
 }

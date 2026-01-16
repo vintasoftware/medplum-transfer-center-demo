@@ -1,9 +1,10 @@
-import { Modal } from '@mantine/core';
-import { QuestionnaireResponse } from '@medplum/fhirtypes';
+import { Loader, Modal } from '@mantine/core';
+import { Questionnaire, QuestionnaireResponse } from '@medplum/fhirtypes';
 import { QuestionnaireForm, useMedplum } from '@medplum/react';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { PATIENT_BED_ASSIGNMENT_QUESTIONNAIRE_ID } from '@/constants';
+import { PATIENT_BED_ASSIGNMENT_QUESTIONNAIRE_NAME } from '@/constants';
+import { getQuestionnaireByName } from '@/utils';
 
 interface AssignToRoomModalProps {
   readonly opened: boolean;
@@ -14,6 +15,15 @@ export function AssignToRoomModal(props: AssignToRoomModalProps): JSX.Element {
   const { opened, onClose } = props;
   const { id } = useParams();
   const medplum = useMedplum();
+  const [questionnaire, setQuestionnaire] = useState<Questionnaire>();
+
+  useEffect(() => {
+    getQuestionnaireByName(medplum, PATIENT_BED_ASSIGNMENT_QUESTIONNAIRE_NAME)
+      .then(setQuestionnaire)
+      .catch((err) => {
+        console.error('Failed to load questionnaire:', err);
+      });
+  }, [medplum]);
 
   const handleSubmit = useCallback(
     (response: QuestionnaireResponse) => {
@@ -29,11 +39,15 @@ export function AssignToRoomModal(props: AssignToRoomModalProps): JSX.Element {
 
   return (
     <Modal size="lg" opened={opened} onClose={onClose}>
-      <QuestionnaireForm
-        questionnaire={{ reference: `Questionnaire/${PATIENT_BED_ASSIGNMENT_QUESTIONNAIRE_ID}` }}
-        subject={{ reference: `ServiceRequest/${id}` }}
-        onSubmit={handleSubmit}
-      />
+      {!questionnaire ? (
+        <Loader />
+      ) : (
+        <QuestionnaireForm
+          questionnaire={questionnaire}
+          subject={{ reference: `ServiceRequest/${id}` }}
+          onSubmit={handleSubmit}
+        />
+      )}
     </Modal>
   );
 }

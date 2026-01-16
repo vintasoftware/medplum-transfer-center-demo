@@ -1,21 +1,54 @@
 import { createReference } from '@medplum/core';
 import { Location, QuestionnaireResponse } from '@medplum/fhirtypes';
 import { MockClient } from '@medplum/mock';
-import { CREATE_LOCATION_ROOM_QUESTIONNAIRE_ID, SAMPLE_MED_LOCATION_ID, SAMPLE_MED_ORG_ID } from '@/constants';
+import {
+  CREATE_LOCATION_ROOM_QUESTIONNAIRE_NAME,
+  SAMPLE_MED_LOCATION_NAME,
+  SAMPLE_MED_ORG_NAME,
+} from '@/constants';
 import { handler } from './location-room-bot';
 
 describe('Location Room Bot', async () => {
   let medplum: MockClient;
   let lvlLocation: Location;
+  let questionnaireId: string;
+  let organizationId: string;
+  let rootLocationId: string;
   const bot = { reference: 'Bot/123' };
   const contentType = 'application/fhir+json';
 
   beforeEach(async () => {
     medplum = new MockClient();
+
+    // Create the organization in the mock client
+    const organization = await medplum.createResource({
+      resourceType: 'Organization',
+      name: SAMPLE_MED_ORG_NAME,
+      active: true,
+    });
+    organizationId = organization.id as string;
+
+    // Create the root location in the mock client
+    const rootLocation = await medplum.createResource({
+      resourceType: 'Location',
+      name: SAMPLE_MED_LOCATION_NAME,
+      status: 'active',
+      mode: 'instance',
+    });
+    rootLocationId = rootLocation.id as string;
+
+    // Create the questionnaire in the mock client
+    const questionnaire = await medplum.createResource({
+      resourceType: 'Questionnaire',
+      name: CREATE_LOCATION_ROOM_QUESTIONNAIRE_NAME,
+      status: 'active',
+    });
+    questionnaireId = questionnaire.id as string;
+
     lvlLocation = await medplum.createResource({
       resourceType: 'Location',
-      partOf: createReference({ resourceType: 'Location', id: SAMPLE_MED_LOCATION_ID }),
-      managingOrganization: createReference({ resourceType: 'Organization', id: SAMPLE_MED_ORG_ID }),
+      partOf: createReference({ resourceType: 'Location', id: rootLocationId }),
+      managingOrganization: createReference({ resourceType: 'Organization', id: organizationId }),
       status: 'active',
       physicalType: {
         coding: [
@@ -32,7 +65,7 @@ describe('Location Room Bot', async () => {
     const input: QuestionnaireResponse = {
       resourceType: 'QuestionnaireResponse',
       status: 'completed',
-      questionnaire: `Questionnaire/${CREATE_LOCATION_ROOM_QUESTIONNAIRE_ID}`,
+      questionnaire: `Questionnaire/${questionnaireId}`,
       item: [
         {
           id: 'id-1',
@@ -98,7 +131,7 @@ describe('Location Room Bot', async () => {
     const input: QuestionnaireResponse = {
       resourceType: 'QuestionnaireResponse',
       status: 'completed',
-      questionnaire: `Questionnaire/${CREATE_LOCATION_ROOM_QUESTIONNAIRE_ID}`,
+      questionnaire: `Questionnaire/${questionnaireId}`,
       item: [
         {
           id: 'id-1',
@@ -134,7 +167,7 @@ describe('Location Room Bot', async () => {
     const input: QuestionnaireResponse = {
       resourceType: 'QuestionnaireResponse',
       status: 'completed',
-      questionnaire: `Questionnaire/${CREATE_LOCATION_ROOM_QUESTIONNAIRE_ID}`,
+      questionnaire: `Questionnaire/${questionnaireId}`,
       item: [
         {
           id: 'id-2',
@@ -170,7 +203,7 @@ describe('Location Room Bot', async () => {
     const input: QuestionnaireResponse = {
       resourceType: 'QuestionnaireResponse',
       status: 'completed',
-      questionnaire: `Questionnaire/${CREATE_LOCATION_ROOM_QUESTIONNAIRE_ID}`,
+      questionnaire: `Questionnaire/${questionnaireId}`,
       item: [
         {
           id: 'id-1',

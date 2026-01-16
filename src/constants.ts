@@ -1,23 +1,21 @@
 import { LOINC, SNOMED } from '@medplum/core';
 import { CodeableConcept } from '@medplum/fhirtypes';
 
-// SampleMed IDs
-export const SAMPLE_MED_ORG_ID = '6cd37206-891f-4783-8b31-e6fed9f70ebd';
-export const SAMPLE_MED_LOCATION_ID = 'ba836894-122f-42d0-874b-83ea9557e4f3';
-
 // SampleMed FHIR URIs
 export const SAMPLE_MED_REQUISITION_SYSTEM = 'https://samplemed.com/fhir/requisition-id';
 
-// Resources identifiers
-// FIXME: https://github.com/SampleMed/samplemed-regional-portal/issues/18
+// SampleMed resource names (use these with utility functions for cloud compatibility)
+export const SAMPLE_MED_ORG_NAME = 'SampleMed';
+export const SAMPLE_MED_LOCATION_NAME = 'SampleMed';
+
+// Questionnaire names (use these with getQuestionnaireByName() for cloud compatibility)
 export const ACCEPTING_PHYSICIAN_INTAKE_QUESTIONNAIRE_NAME = 'accepting-physician-intake-questionnaire';
-export const CREATE_LOCATION_LVL_QUESTIONNAIRE_ID = 'cd78cab0-d3b4-4b33-9df2-60289ac3ca8b';
-export const CREATE_LOCATION_ROOM_QUESTIONNAIRE_ID = 'e82a8b16-27fa-4f34-a8cd-daacaac6fc81';
+export const CREATE_LOCATION_LVL_QUESTIONNAIRE_NAME = 'create-location-lvl-questionnaire';
+export const CREATE_LOCATION_ROOM_QUESTIONNAIRE_NAME = 'create-location-ro-questionnaire';
 export const PATIENT_INTAKE_QUESTIONNAIRE_NAME = 'patient-intake-questionnaire';
-export const PATIENT_INTAKE_QUESTIONNAIRE_ID = '4469a0a6-10e3-4712-b735-a32b121d45e1';
-export const PHYSICIAN_ONBOARDING_QUESTIONNAIRE_ID = 'd617f4a4-2d38-478f-99dc-d27167f7d03d';
-export const QUESTIONNAIRE_ASSIGNMENT_QUESTIONNAIRE_ID = '92bad4dc-24ca-41f7-9fdb-80b5bfb57100';
-export const PATIENT_BED_ASSIGNMENT_QUESTIONNAIRE_ID = '989e50a6-55a4-4e96-90f4-f9a231b29769';
+export const PHYSICIAN_ONBOARDING_QUESTIONNAIRE_NAME = 'physician-onboarding-questionnaire';
+export const QUESTIONNAIRE_ASSIGNMENT_QUESTIONNAIRE_NAME = 'questionnaire-assignment-questionnaire';
+export const PATIENT_BED_ASSIGNMENT_QUESTIONNAIRE_NAME = 'patient-bed-assignment-questionnaire';
 
 // Observation
 export const VITAL_SIGNS_CATEGORY: CodeableConcept = {
