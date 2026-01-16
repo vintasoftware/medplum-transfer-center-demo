@@ -124,6 +124,22 @@ npm run bots:deploy
 
 When creating a new bot, make sure to add it to the `BOTS` array in the `scripts/deploy-bots.ts` file.
 
+### Creating the Agent and Endpoint
+
+After deploying the bots, you need to create the Medplum Agent and Endpoint resources to enable HL7 message processing:
+
+1. First, update the `data/core/agent-data.json` file with your ADT processing bot ID. Replace `${YOUR_ADT_PROCESSING_BOT_ID}` with the actual Bot ID from your deployed bots.
+
+2. Then, upload the agent configuration:
+
+```bash
+npx medplum post '' "$(cat data/core/agent-data.json)"
+```
+
+This will create:
+- An **Endpoint** resource configured for HL7 v2 MLLP on port 56000
+- An **Agent** resource that routes incoming HL7 messages to your ADT processing bot
+
 ## Running Commands Locally
 
 ### Medplum Agent
