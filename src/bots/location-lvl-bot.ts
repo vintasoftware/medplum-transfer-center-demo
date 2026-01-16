@@ -1,6 +1,10 @@
 import { MedplumClient, BotEvent, getQuestionnaireAnswers, createReference } from '@medplum/core';
-import { Location, QuestionnaireResponse } from '@medplum/fhirtypes';
-import { CREATE_LOCATION_LVL_QUESTIONNAIRE_ID, SAMPLE_MED_LOCATION_ID, SAMPLE_MED_ORG_ID } from '@/constants';
+import { Location, Organization, Questionnaire, QuestionnaireResponse } from '@medplum/fhirtypes';
+import {
+  CREATE_LOCATION_LVL_QUESTIONNAIRE_NAME,
+  SAMPLE_MED_LOCATION_NAME,
+  SAMPLE_MED_ORG_NAME,
+} from '@/constants';
 
 export async function handler(medplum: MedplumClient, event: BotEvent<QuestionnaireResponse>): Promise<void> {
   const { input } = event;
@@ -9,7 +13,14 @@ export async function handler(medplum: MedplumClient, event: BotEvent<Questionna
     throw new Error('Invalid input');
   }
 
-  if (input.questionnaire !== `Questionnaire/${CREATE_LOCATION_LVL_QUESTIONNAIRE_ID}`) {
+  // Validate questionnaire by fetching it and checking the name
+  const questionnaireRef = input.questionnaire;
+  if (!questionnaireRef) {
+    throw new Error('Missing questionnaire reference');
+  }
+
+  const questionnaire = await medplum.readReference<Questionnaire>({ reference: questionnaireRef });
+  if (questionnaire.name !== CREATE_LOCATION_LVL_QUESTIONNAIRE_NAME) {
     throw new Error('Invalid questionnaire');
   }
 
@@ -22,10 +33,24 @@ export async function handler(medplum: MedplumClient, event: BotEvent<Questionna
 
   const telecomPhone = answers['telecomPhone']?.valueString;
 
+  // Fetch organization and parent location by name
+  const [organization, parentLocation] = await Promise.all([
+    medplum.searchOne('Organization', { name: SAMPLE_MED_ORG_NAME }),
+    medplum.searchOne('Location', { name: SAMPLE_MED_LOCATION_NAME }),
+  ]);
+
+  if (!organization) {
+    throw new Error(`Organization "${SAMPLE_MED_ORG_NAME}" not found`);
+  }
+
+  if (!parentLocation) {
+    throw new Error(`Location "${SAMPLE_MED_LOCATION_NAME}" not found`);
+  }
+
   const location: Location = {
     resourceType: 'Location',
-    managingOrganization: createReference({ resourceType: 'Organization', id: SAMPLE_MED_ORG_ID }),
-    partOf: createReference({ resourceType: 'Location', id: SAMPLE_MED_LOCATION_ID }),
+    managingOrganization: createReference(organization as Organization),
+    partOf: createReference(parentLocation as Location),
     status: 'active',
     physicalType: {
       coding: [
