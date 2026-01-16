@@ -51,6 +51,9 @@ const BOTS: BotDescription[] = [
     extension: [getSubscriptionExtension('create')],
     questionnaires: ['patient-bed-assignment-questionnaire'],
   },
+  {
+    name: 'adt-processing-bot',
+  },
 ];
 
 async function uploadBots(): Promise<void> {
@@ -169,7 +172,10 @@ function getSubscriptionExtension(valueCode: 'create' | 'update' | 'delete' | un
 }
 
 function readBotFiles(description: BotDescription): Record<string, BundleEntry> {
-  const sourceFile = fs.readFileSync(`src/bots/${description.name}.ts`);
+  const tsPath = `src/bots/${description.name}.ts`;
+  const ctsPath = `src/bots/${description.name}.cts`;
+  const sourcePath = fs.existsSync(ctsPath) ? ctsPath : tsPath;
+  const sourceFile = fs.readFileSync(sourcePath);
   const distFile = fs.readFileSync(`dist/bots/${description.name}.js`);
 
   const srcEntry: BundleEntry = {
