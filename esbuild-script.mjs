@@ -8,7 +8,7 @@ import esbuild from 'esbuild';
 import fastGlob from 'fast-glob';
 
 // Find all TypeScript files in your source directory
-const entryPoints = fastGlob.sync('./src/**/*.ts').filter((file) => !file.endsWith('test.ts'));
+const entryPoints = fastGlob.sync('./src/**/*.*ts').filter((file) => !file.endsWith('test.ts'));
 
 const botLayerDeps = Object.keys(botLayer.dependencies);
 
