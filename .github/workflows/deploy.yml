@@ -38,7 +38,7 @@ jobs:
         run: npm ci
 
       - name: Create app .env file
-        working-directory: ./src/app
+        working-directory: .
         run: |
           cat > .env << EOF
           MEDPLUM_BASE_URL=${{ secrets.MEDPLUM_BASE_URL }}
