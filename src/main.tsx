@@ -11,7 +11,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from '@/App';
 
 const medplum = new MedplumClient({
-  onUnauthenticated: () => (window.location.href = '/'),
+  onUnauthenticated: () => (window.location.href = '/medplum-transfer-center-demo/'),
   // baseUrl: 'http://localhost:8103/', //Uncomment this to run against the server on your localhost; also change `googleClientId` in `./pages/SignInPage.tsx`
 });
 
@@ -38,7 +38,7 @@ const container = document.getElementById('root') as HTMLDivElement;
 const root = createRoot(container);
 root.render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/medplum-transfer-center-demo">
       <MedplumProvider medplum={medplum}>
         <MantineProvider theme={theme}>
           <ModalsProvider>
