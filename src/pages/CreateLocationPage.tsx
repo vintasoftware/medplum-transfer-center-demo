@@ -1,27 +1,26 @@
-import { Container, Loader } from '@mantine/core';
-import { createReference } from '@medplum/core';
+import { CREATE_LOCATION_LVL_QUESTIONNAIRE_NAME, CREATE_LOCATION_ROOM_QUESTIONNAIRE_NAME } from '@/constants';
+import { getQuestionnaireByName } from '@/utils';
+import { Alert, Container, Loader } from '@mantine/core';
+import { createReference, normalizeErrorString } from '@medplum/core';
 import { Questionnaire, QuestionnaireResponse, QuestionnaireResponseItem } from '@medplum/fhirtypes';
 import { QuestionnaireForm, useMedplum, useMedplumNavigate } from '@medplum/react';
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { CREATE_LOCATION_ROOM_QUESTIONNAIRE_NAME, CREATE_LOCATION_LVL_QUESTIONNAIRE_NAME } from '@/constants';
-import { getQuestionnaireByName } from '@/utils';
 
 export function CreateLocationPage(): JSX.Element {
   const navigate = useMedplumNavigate();
   const { id } = useParams();
   const medplum = useMedplum();
   const [questionnaire, setQuestionnaire] = useState<Questionnaire>();
+  const [error, setError] = useState<string>();
 
   useEffect(() => {
-    const questionnaireName = id
-      ? CREATE_LOCATION_ROOM_QUESTIONNAIRE_NAME
-      : CREATE_LOCATION_LVL_QUESTIONNAIRE_NAME;
+    const questionnaireName = id ? CREATE_LOCATION_ROOM_QUESTIONNAIRE_NAME : CREATE_LOCATION_LVL_QUESTIONNAIRE_NAME;
 
     getQuestionnaireByName(medplum, questionnaireName)
       .then(setQuestionnaire)
       .catch((err) => {
-        console.error('Failed to load questionnaire:', err);
+        setError(normalizeErrorString(err));
       });
   }, [id, medplum]);
 
@@ -45,6 +44,16 @@ export function CreateLocationPage(): JSX.Element {
     },
     [id, medplum, navigate]
   );
+
+  if (error) {
+    return (
+      <Container fluid>
+        <Alert color="red" title="Error loading questionnaire">
+          {error}
+        </Alert>
+      </Container>
+    );
+  }
 
   if (!questionnaire) {
     return (
