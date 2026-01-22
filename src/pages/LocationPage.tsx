@@ -127,7 +127,7 @@ export function LocationsPage(): JSX.Element {
       }`;
     }
     if (!rootLocation?.id) return '';
-    console.log('Using root location ID:', rootLocation.id);
+
     return `{
       ResourceList: LocationList(partof: "Location/${rootLocation.id}", physical_type: "lvl", _sort: "name", _count: 40) {
         id
