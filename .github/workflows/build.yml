@@ -43,6 +43,9 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          VITE_MEDPLUM_PROJECT_ID: ${{ secrets.VITE_MEDPLUM_PROJECT_ID }}
+          VITE_MEDPLUM_GOOGLE_CLIENT_ID: ${{ secrets.VITE_MEDPLUM_GOOGLE_CLIENT_ID }}
 
   lint:
     name: Run linter

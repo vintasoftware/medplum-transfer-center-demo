@@ -1,5 +1,15 @@
 /// <reference types="vite/client" />
 
+interface ImportMetaEnv {
+  readonly VITE_MEDPLUM_PROJECT_ID: string;
+  readonly VITE_MEDPLUM_GOOGLE_CLIENT_ID: string;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
+
 // Re-export JSX namespace from React for React 19 compatibility
 declare global {
   namespace JSX {
