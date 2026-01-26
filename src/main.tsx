@@ -1,14 +1,14 @@
+import App from '@/App';
 import { MantineProvider, createTheme } from '@mantine/core';
+import '@mantine/core/styles.css';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
-import '@mantine/core/styles.css';
 import { MedplumClient } from '@medplum/core';
 import { MedplumProvider } from '@medplum/react';
 import '@medplum/react/styles.css';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import App from '@/App';
+import { HashRouter } from 'react-router-dom';
 
 const medplum = new MedplumClient({
   onUnauthenticated: () => (window.location.href = '/'),
@@ -38,7 +38,7 @@ const container = document.getElementById('root') as HTMLDivElement;
 const root = createRoot(container);
 root.render(
   <StrictMode>
-    <BrowserRouter>
+    <HashRouter>
       <MedplumProvider medplum={medplum}>
         <MantineProvider theme={theme}>
           <ModalsProvider>
@@ -47,6 +47,6 @@ root.render(
           </ModalsProvider>
         </MantineProvider>
       </MedplumProvider>
-    </BrowserRouter>
+    </HashRouter>
   </StrictMode>
 );
