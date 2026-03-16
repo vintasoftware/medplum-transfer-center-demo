@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Button, Container, Group, Loader, Text, Title } from '@mantine/core';
-import { modals } from '@mantine/modals';
-import { PropertyType } from '@medplum/core';
-import { Location } from '@medplum/fhirtypes';
-import { useMedplum } from '@medplum/react';
 import { FhirPathTable, FhirPathTableField } from '@/components/FhirPathTable/FhirPathTable';
 import { SAMPLE_MED_LOCATION_NAME } from '@/constants';
+import { Alert, Button, Container, Group, Loader, Text, Title } from '@mantine/core';
+import { modals } from '@mantine/modals';
+import { normalizeErrorString, PropertyType } from '@medplum/core';
+import { Location } from '@medplum/fhirtypes';
+import { useMedplum } from '@medplum/react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export function LocationsPage(): JSX.Element {
   const navigate = useNavigate();
@@ -15,6 +15,7 @@ export function LocationsPage(): JSX.Element {
   const [refresh, setRefresh] = useState(false);
   const medplum = useMedplum();
   const [rootLocation, setRootLocation] = useState<Location>();
+  const [error, setError] = useState<string>();
 
   useEffect(() => {
     if (!id) {
@@ -27,7 +28,7 @@ export function LocationsPage(): JSX.Element {
           setRootLocation(location);
         })
         .catch((err) => {
-          console.error('Failed to load root location:', err);
+          setError(normalizeErrorString(err));
         });
     }
   }, [id, medplum]);
@@ -126,7 +127,6 @@ export function LocationsPage(): JSX.Element {
       }`;
     }
     if (!rootLocation?.id) return '';
-    console.log('Using root location ID:', rootLocation.id);
     return `{
       ResourceList: LocationList(partof: "Location/${rootLocation.id}", physical_type: "lvl", _sort: "name", _count: 40) {
         id
@@ -141,6 +141,16 @@ export function LocationsPage(): JSX.Element {
 
   function handleNewClick() {
     navigate(id ? `/Location/${id}/new` : '/Location/new');
+  }
+
+  if (error) {
+    return (
+      <Container fluid>
+        <Alert color="red" title="Error loading location">
+          {error}
+        </Alert>
+      </Container>
+    );
   }
 
   if (!id && !rootLocation) {

@@ -4,7 +4,5 @@ export * from './createBloodPressureObservationComponent';
 export * from './createBundleEntry';
 export * from './createBundleEntryReference';
 export * from './createObservation';
-export * from './location';
-export * from './organization';
 export * from './questionnaire';
 export * from './shouldShowPatientSummary';
