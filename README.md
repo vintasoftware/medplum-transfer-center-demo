@@ -1,10 +1,39 @@
-# Medplum Transfer Center
+<h1 align="center">Medplum Transfer Center</h1>
+<p align="center">An open-source hospital transfer center portal built on the Medplum platform.</p>
+<p align="center">
+  <a href="https://github.com/medplum/medplum-transfer-center-demo/actions">
+    <img src="https://github.com/medplum/medplum-transfer-center-demo/actions/workflows/build.yml/badge.svg" />
+  </a>
+  <a href="https://github.com/medplum/medplum-transfer-center-demo/blob/main/LICENSE.txt">
+    <img src="https://img.shields.io/badge/license-Apache-blue.svg" />
+  </a>
+</p>
 
-This repo is for the Medplum transfer center demo. Currently this portal includes a dashboard for the transfer center, as well as patient intake, and physician onboarding for the portal.
+### What is the Medplum Transfer Center?
+
+The Medplum Transfer Center is a **ready-to-use hospital transfer center demo app** that is open source. It provides a portal for managing patient transfers between facilities, including a transfer center dashboard, patient intake, and physician onboarding. It is meant for developers to clone, customize, and run.
+
+### Features
+
+- Completely free and open-source
+- Secure and compliant [Medplum](https://www.medplum.com) backend, which is also open source
+- Transfer center dashboard for managing incoming patient transfers
+- Patient intake workflow via FHIR Questionnaires
+- Physician onboarding for accepting transfer requests
+- Hospital location management (buildings, wards, rooms)
+- Real-time HL7 ADT message processing via Medplum Agent
+- Automated bed assignment workflows
+- All data represented in [FHIR](https://hl7.org/FHIR/)
 
 ## Repo Overview
 
-TODO: Enumerate bots, scripts and their use cases, important custom components such as the , etc.
+| Directory / File            | Purpose                                                            |
+| --------------------------- | ------------------------------------------------------------------ |
+| `src/`                      | React application source code (pages, components, hooks, utils)    |
+| `src/bots/`                 | Medplum bots for automating FHIR resource creation and HL7 parsing |
+| `data/core/`                | Core FHIR bundle data (CodeSystems, ValueSets, Questionnaires)     |
+| `scripts/`                  | Utility scripts for deploying bots and sending ADT messages        |
+| `data/core/agent-data.json` | Medplum Agent and Endpoint resource definitions                    |
 
 ## Data Model
 
@@ -50,21 +79,42 @@ This model allows us to use [FHIR search semantics](https://www.hl7.org/fhir/sea
 
 Note that along with each location, we also denote an "alias" which is just the room number. This allows us to search for just the room number more directly while still displaying the full `Location.name` (eg. `3SURG 307`) by default for the user when facilitating things like user type-aheads in inputs or displaying locations in a table cell.
 
----
+## Getting Started
 
-TODO: Include notes about other parts of the data model
+First, [fork](https://github.com/medplum/medplum-transfer-center-demo/fork) and clone the repo.
 
-## Development
+Next, install the app from your terminal:
 
-To run the development server for this app, type the following in your console of choice:
+```bash
+npm install
+```
+
+### Environment Setup
+
+Copy the example environment file and fill in your Medplum project credentials:
+
+```bash
+cp .env.example .env
+```
+
+| Variable                        | Description                                        |
+| ------------------------------- | -------------------------------------------------- |
+| `VITE_MEDPLUM_PROJECT_ID`       | Your Medplum project ID (used by the frontend)     |
+| `VITE_MEDPLUM_GOOGLE_CLIENT_ID` | Google OAuth client ID for login (optional)        |
+| `MEDPLUM_CLIENT_ID`             | Medplum client ID for bot deployment scripts       |
+| `MEDPLUM_CLIENT_SECRET`         | Medplum client secret for bot deployment scripts   |
+| `DEPLOY_MEDPLUM_CLIENT_ID`      | Medplum client ID used during CI/CD deployment     |
+| `DEPLOY_MEDPLUM_CLIENT_SECRET`  | Medplum client secret used during CI/CD deployment |
+
+Then, run the app:
 
 ```bash
 npm run dev
 ```
 
-This will host the Vite development server locally, which by default should be hosted on port 3000.
+This app should run on `http://localhost:3000/`
 
-## Building for production
+## Building for Production
 
 To build the app, run:
 
@@ -72,7 +122,7 @@ To build the app, run:
 npm run build
 ```
 
-## Upserting core data
+## Upserting Core Data
 
 To upsert the core data into the Medplum server, run:
 
@@ -81,9 +131,9 @@ npx medplum post '' "$(cat path/to/bundle.json)"
 # Example: npx medplum post '' "$(cat data/core/core-data.json)"
 ```
 
-### Core data
+### Core Data
 
-The core data for the Hospital Regional Portal is stored in the `data/core` directory. This data is used to populate the Medplum server with the necessary resources for the portal to function. The core data includes the following resources:
+The core data for the Transfer Center is stored in the `data/core` directory. This data is used to populate the Medplum server with the necessary resources for the portal to function. The core data includes the following resources:
 
 | Resource Type | Name                                     |
 | ------------- | ---------------------------------------- |
@@ -100,9 +150,45 @@ The core data for the Hospital Regional Portal is stored in the `data/core` dire
 | Questionnaire | patient-intake-questionnaire             |
 | Questionnaire | physician-onboarding-questionnaire       |
 
+## Questionnaires
+
+[FHIR Questionnaires](https://hl7.org/fhir/r4/questionnaire.html) are structured forms defined as FHIR resources. They describe the fields, types, and validation rules for a form, while a `QuestionnaireResponse` stores the answers a user submitted. This separation keeps the form definition (the schema) independent from the collected data (the responses).
+
+In this portal, Questionnaires drive every user-facing workflow. The frontend renders them using Medplum's `<QuestionnaireForm>` React component, and each submission produces a `QuestionnaireResponse` that triggers the corresponding bot via a FHIR Subscription (see [Bots](#bots) below).
+
+| Questionnaire name                         | Title                     | Purpose                                            |
+| ------------------------------------------ | ------------------------- | -------------------------------------------------- |
+| `patient-intake-questionnaire`             | Patient Transfer Form     | Captures incoming transfer request details         |
+| `accepting-physician-intake-questionnaire` | Accepting Physician Form  | Records the accepting physician's intake decision  |
+| `patient-bed-assignment-questionnaire`     | Patient Bed Assignment    | Assigns an admitted patient to a specific bed/room |
+| `physician-onboarding-questionnaire`       | Physician Onboarding Form | Onboards a new physician into the portal           |
+| `create-location-lvl-questionnaire`        | Create Location Form      | Creates a new ward/level Location resource         |
+| `create-location-ro-questionnaire`         | Create Room Form          | Creates a new room Location resource               |
+
+All Questionnaire definitions are bundled in [data/core/core-data.json](data/core/core-data.json) and uploaded to Medplum as part of the core data setup.
+
 ## Bots
 
-The bots in this project are used to automate the creation of resources in the Medplum server.
+Bots are server-side TypeScript functions that run on the Medplum platform in response to events. This project uses two triggering mechanisms:
+
+- **FHIR Subscriptions** — six bots are subscribed to the `create` event of a specific `QuestionnaireResponse`. When a user submits a form (Questionnaire) in the portal, Medplum fires the subscription and invokes the corresponding bot.
+- **Medplum Agent** — the ADT processing bot has no subscription. Instead, it is invoked directly by the Medplum Agent whenever an HL7 v2 ADT message arrives over MLLP.
+
+The deploy script in [scripts/deploy-bots.ts](scripts/deploy-bots.ts) handles creating or updating each bot and its associated `Subscription` resource automatically when you run `npm run bots:deploy`.
+
+### Bot Reference
+
+| Bot                                                                             | Trigger                           | Questionnaire                              |
+| ------------------------------------------------------------------------------- | --------------------------------- | ------------------------------------------ |
+| [patient-intake-bot.ts](src/bots/patient-intake-bot.ts)                         | `QuestionnaireResponse` created   | `patient-intake-questionnaire`             |
+| [accepting-physician-intake-bot.ts](src/bots/accepting-physician-intake-bot.ts) | `QuestionnaireResponse` created   | `accepting-physician-intake-questionnaire` |
+| [patient-bed-assignment-bot.ts](src/bots/patient-bed-assignment-bot.ts)         | `QuestionnaireResponse` created   | `patient-bed-assignment-questionnaire`     |
+| [physician-onboarding-bot.ts](src/bots/physician-onboarding-bot.ts)             | `QuestionnaireResponse` created   | `physician-onboarding-questionnaire`       |
+| [location-lvl-bot.ts](src/bots/location-lvl-bot.ts)                             | `QuestionnaireResponse` created   | `create-location-lvl-questionnaire`        |
+| [location-room-bot.ts](src/bots/location-room-bot.ts)                           | `QuestionnaireResponse` created   | `create-location-ro-questionnaire`         |
+| [adt-processing-bot.cts](src/bots/adt-processing-bot.cts)                       | Medplum Agent (HL7 ADT over MLLP) | —                                          |
+
+### Building and Deploying
 
 Before running any of the bot commands, make sure to set the environment variables in the `.env` file.
 
@@ -137,6 +223,7 @@ npx medplum post '' "$(cat data/core/agent-data.json)"
 ```
 
 This will create:
+
 - An **Endpoint** resource configured for HL7 v2 MLLP on port 56000
 - An **Agent** resource that routes incoming HL7 messages to your ADT processing bot
 
@@ -146,13 +233,14 @@ This will create:
 
 The Medplum Agent is required to receive HL7 messages. To run the agent locally, follow the instructions in the [Medplum Agent documentation](https://www.medplum.com/docs/agent).
 
-Once the agent is running, you can send test ADT messages using the provided script to test the sample application:
+Once the agent is running, you can send ADT messages using the provided script to test the sample application:
 
 ```bash
 npm run send-adt <MESSAGE_TYPE> <ROOM_NUMBER>
 ```
 
 Available message types:
+
 - `A01` - Patient admission
 - `A03` - Patient discharge
 
@@ -162,3 +250,26 @@ Example:
 npm run send-adt A01 201  # Admit patient to room 201
 npm run send-adt A03 201  # Discharge patient from room 201
 ```
+
+## Account Setup
+
+By default, your locally running Transfer Center app points to the hosted Medplum service. To use your own organization's Medplum project, [register a new Project on Medplum](https://www.medplum.com/docs/tutorials/register) and configure your environment variables accordingly (see [config.ts](src/config.ts)).
+
+If you are using the Medplum Hosted service, you can log in to your Medplum instance and add the following identifiers to your [Project Site Settings](https://app.medplum.com/admin/sites):
+
+- Google Client Id
+- Google Client Secret
+- Recaptcha Site Key
+- Recaptcha Secret Key
+
+Contact the Medplum team ([support@medplum.com](mailto:support@medplum.com) or [Discord](https://discord.gg/medplum)) with any questions.
+
+## About Medplum
+
+[Medplum](https://www.medplum.com/) is an open-source, API-first EHR. Medplum makes it easy to build healthcare apps quickly with less code.
+
+Medplum supports self-hosting and provides a [hosted service](https://app.medplum.com/).
+
+- Read our [documentation](https://www.medplum.com/docs/)
+- Browse our [React component library](https://storybook.medplum.com/)
+- Join our [Discord](https://discord.gg/medplum)
