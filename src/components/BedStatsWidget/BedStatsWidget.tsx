@@ -5,7 +5,7 @@ import { Bundle, Location } from '@medplum/fhirtypes';
 import { useMedplum, useSubscription } from '@medplum/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-const parentOrgId = 'ba836894-122f-42d0-874b-83ea9557e4f3';
+const parentOrgName = 'SampleMed';
 
 // We pulled this out because it prevents the object from being recreated on every re-render
 // It also makes us hit the fast path for `deepEquals` of object reference equality within the useSubscription hook
@@ -36,7 +36,7 @@ export function BedStatsWidget(): JSX.Element {
         const result = await medplum.graphql(
           `
       {
-        Location(id: "${parentOrgId}") {
+        LocationList(name: "${parentOrgName}") {
           id
           name
           LocationList(_reference: partof, physical_type: "lvl") {
@@ -74,7 +74,7 @@ export function BedStatsWidget(): JSX.Element {
         );
 
         const locations = [] as Location[];
-        for (const level of result.data.Location.LocationList) {
+        for (const level of result.data.LocationList[0].LocationList) {
           locations.push({ ...level });
         }
         setLocations(locations);
